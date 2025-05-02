@@ -40,7 +40,7 @@ const Tester = () => {
             type="range"
             min={-5}
             max={5}
-            step={0.1}
+            step={0.001}
             value={position[axis]}
             onChange={e => handlePositionChange(axis, e.target.value)}
           />
