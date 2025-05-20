@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import { getDoc, doc, getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from './firebaseConfig'; // adjust the path if needed
+import { firebaseConfig } from '../firebaseConfig'; // adjust the path if needed
 
 // Initialize Firebase App (only once)
 const app = initializeApp(firebaseConfig);
