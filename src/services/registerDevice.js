@@ -17,7 +17,6 @@ export const registerDevice = async (deviceId, bool) => {
       // Step 2: Update that document's request_status
       await updateDoc(docRef, {
         request_status: bool,
-        deviceId: deviceId,
         timestamp: serverTimestamp()
       });
     } else {
