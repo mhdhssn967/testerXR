@@ -50,14 +50,12 @@ export const useAccessRequestStatus = () => {
 
   useEffect(() => {
     const accessRequestRef = collection(firestore, "access_request");
-    const q = query(accessRequestRef, where("request_status", "==", false));
+
+    // ✅ Query for request_status == true
+    const q = query(accessRequestRef, where("request_status", "==", true));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        setIsRequestActive(true);
-      } else {
-        setIsRequestActive(false);
-      }
+      setIsRequestActive(!snapshot.empty); // true if found
     });
 
     return () => unsubscribe();
@@ -71,14 +69,12 @@ export const useAccessRequestCredentialsStatus = () => {
 
   useEffect(() => {
     const accessRequestRef = collection(firestore, "access_request");
-    const q = query(accessRequestRef, where("credentials_exist", "==", false));
+
+    // ✅ Query for credentials_exist == true
+    const q = query(accessRequestRef, where("credentials_exist", "==", true));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      if (!snapshot.empty) {
-        setIsCredentials(true);
-      } else {
-        setIsCredentials(false);
-      }
+      setIsCredentials(!snapshot.empty); // true if found
     });
 
     return () => unsubscribe();
@@ -86,6 +82,7 @@ export const useAccessRequestCredentialsStatus = () => {
 
   return isCredentials;
 };
+
 
 
 export const setCredentialsFalse=async()=>{

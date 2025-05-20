@@ -16,9 +16,7 @@ const VRDevice = () => {
     }
 
     const authRequest = useAccessRequestStatus(); 
-    const credentialsExist = useAccessRequestCredentialsStatus();
-    console.log('credentials',credentialsExist);
-    
+    const credentialsExist = useAccessRequestCredentialsStatus();    
 
     
   return (
