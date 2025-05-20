@@ -2,14 +2,14 @@ import { getFirestore, doc, setDoc, getDoc, updateDoc, query, where, getDocs, co
 import { serverTimestamp } from "firebase/firestore";
 
 
-export const registerDevice = async (deviceId) => {
+export const registerDevice = async (deviceId,bool) => {
   try {
     const db = getFirestore();
 
     // Query to find the document with request_status: false
     const q = query(
       collection(db, "access_request"),
-      where("request_status", "==", false)
+      where("request_status", "==", false || true)
     );
 
     const querySnapshot = await getDocs(q);
@@ -20,7 +20,7 @@ export const registerDevice = async (deviceId) => {
       
       // Update that document to set request_status to true
       await updateDoc(docRef, {
-        request_status: true,
+        request_status: bool,
       });
     } else {
       console.log("No document with request_status: false found.");

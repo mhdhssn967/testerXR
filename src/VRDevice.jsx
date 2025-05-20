@@ -6,8 +6,8 @@ const VRDevice = () => {
 
     const deviceId='edfk3455309sdznswerp00234'
 
-    const handleRegisteration=async()=>{
-        await registerDevice(deviceId)
+    const handleRegisteration=async(bool)=>{
+        await registerDevice(deviceId,bool)
     }
   return (
     <>
@@ -15,7 +15,8 @@ const VRDevice = () => {
         <h1>Welcome to Happy Moves</h1>
         <h2>Register your device to continue</h2>
         <h2>Device Id - {deviceId}</h2>
-        <button onClick={handleRegisteration}>Register Device</button>
+        <button onClick={()=>handleRegisteration(true)}>Register Device</button>
+        <button onClick={()=>handleRegisteration(false)}>Set False</button>
     </div>
     </>
   )
