@@ -1,7 +1,7 @@
 import { getFirestore, doc, setDoc, getDoc, updateDoc, query,onSnapshot, where, getDocs, collection, deleteDoc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { useEffect, useState } from 'react';
-
+import { db, auth } from '../../firebaseConfig';
 
 export const registerDevice = async (deviceId, bool) => {
   try {
