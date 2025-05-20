@@ -25,7 +25,7 @@ const VRDevice = () => {
         <h1>Welcome to Happy Moves</h1>
         <h2>Register your device to continue</h2>
         <h2>Device Id - {deviceId}</h2>
-        {authRequest?
+        {!authRequest?
           <button onClick={handleRegisteration}>Register Device</button>:
           <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
           }
