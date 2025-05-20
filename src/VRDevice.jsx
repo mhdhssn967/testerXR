@@ -8,59 +8,64 @@ import { db } from '../firebaseConfig'
 
 const VRDevice = () => {
 
-    const deviceId='edfk3455309sdznswerp00234' //Mock device id
-    const navigate = useNavigate()
-    
+  const deviceId = 'edfk3455309sdznswerp00234' //Mock device id
+  const navigate = useNavigate()
 
-    const handleRegisteration=async()=>{
-        await registerDevice(deviceId,true)
-    }
-    const handleRegisterationFalse=async()=>{
-      await registerDevice(deviceId,false)
-      await setCredentialsFalse()
-    }
 
-    const authRequest = useAccessRequestStatus(); 
-    const credentialsExist = useAccessRequestCredentialsStatus();
-      
+  const handleRegisteration = async () => {
+    await registerDevice(deviceId, true)
+  }
+  const handleRegisterationFalse = async () => {
+    await registerDevice(deviceId, false)
+    await setCredentialsFalse()
+  }
+
+  const authRequest = useAccessRequestStatus();
+  const credentialsExist = useAccessRequestCredentialsStatus();
+
 
   const handleLogin = async (e) => {
     handleRegisterationFalse()
-  e.preventDefault();
-  try {
-    const docRef = doc(db, "device_request", deviceId);
-    const docSnap = await getDoc(docRef);
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "device_request", deviceId);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const { email, password } = docSnap.data();
-      if (!email || !password) {
-        console.log("Email or password missing in Firestore document.");
-        return;
+      if (docSnap.exists()) {
+        const { email, password } = docSnap.data();
+        if (!email || !password) {
+          console.log("Email or password missing in Firestore document.");
+          return;
+        }
+
+        await loginUser(email, password);
+        navigate('/home'); // redirect on success
+      } else {
+        console.log("No device request found.");
       }
-
-      await loginUser(email, password);
-      navigate('/home'); // redirect on success
-    } else {
-      console.log("No device request found.");
+    } catch (err) {
+      console.log("Login failed:", err.message);
     }
-  } catch (err) {
-    console.log("Login failed:", err.message);
-  }
-};
-    
+  };
+
 
   return (
     <>
-    <div className='VR-container'>
+      <div className='VR-container'>
         <h1>Welcome to Happy Moves</h1>
         <h2>Register your device to continue</h2>
         <h2>Device Id - {deviceId}</h2>
-        {!authRequest?
-          <button onClick={handleRegisteration}>Register Device</button>:
-          <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
-          }
-        {credentialsExist&&<button className='login-btn' onClick={handleLogin}>Login</button>}
-    </div>
+        {!credentialsExist && (
+          !authRequest ?
+            <button onClick={handleRegisteration}>Register Device</button> :
+            <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
+        )}
+        {credentialsExist &&
+          <div>
+            <h2 style={{ color: 'rgb(4, 173, 4)' }}><i style={{ color: 'rgb(4, 173, 4)' }} className="fa-solid fa-circle-check"></i> Device is succesfully registered</h2>
+            <button className='login-btn' onClick={handleLogin}>Login</button>
+          </div>}
+      </div>
     </>
   )
 }
