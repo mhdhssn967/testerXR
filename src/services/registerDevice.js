@@ -1,7 +1,6 @@
-import { getFirestore, doc, setDoc, getDoc, updateDoc, query,onSnapshot, where, getDocs, collection } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, query,onSnapshot, where, getDocs, collection, deleteDoc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import { useEffect, useState } from 'react';
-
 
 
 export const registerDevice = async (deviceId, bool) => {
@@ -14,7 +13,7 @@ export const registerDevice = async (deviceId, bool) => {
     if (!querySnapshot.empty) {
       const docRef = querySnapshot.docs[0].ref;
 
-      // Step 2: Update that document's request_status
+      // Step 2: Update that document's request_status and timestamp
       await updateDoc(docRef, {
         request_status: bool,
         timestamp: serverTimestamp()
@@ -23,18 +22,25 @@ export const registerDevice = async (deviceId, bool) => {
       console.warn("No document found in 'access_request'.");
     }
 
-    // Step 3: Create/update a device-specific document in 'device_request'
-    await setDoc(doc(db, "device_request", deviceId), {
-      status: "active",
-      timestamp: serverTimestamp(),
-      deviceId: deviceId
-    });
+    const deviceDocRef = doc(db, "device_request", deviceId);
 
-    console.log("Device registered successfully.");
+    // Step 3: If bool is true, create/update the device_request doc
+    if (bool) {
+      await setDoc(deviceDocRef, {
+        status: "active",
+        timestamp: serverTimestamp(),
+        deviceId: deviceId
+      });
+    } else {
+      // Step 4: If bool is false, delete the device_request doc
+      await deleteDoc(deviceDocRef);
+    }
+
+    console.log("Device registration process completed.");
   } catch (error) {
     console.error("Error registering device: ", error);
   }
-};
+};;
 
 
 const firestore = getFirestore();
