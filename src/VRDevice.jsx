@@ -25,6 +25,7 @@ const VRDevice = () => {
       
 
   const handleLogin = async (e) => {
+    handleRegisterationFalse()
   e.preventDefault();
   try {
     const docRef = doc(db, "device_request", deviceId);
@@ -58,7 +59,6 @@ const VRDevice = () => {
           <button onClick={handleRegisteration}>Register Device</button>:
           <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
           }
-        <button onClick={handleRegisterationFalse}>Set False</button>
         {credentialsExist&&<button className='login-btn' onClick={handleLogin}>Login</button>}
     </div>
     </>
