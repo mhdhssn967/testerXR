@@ -9,7 +9,7 @@ export const registerDevice = async (deviceId,bool) => {
     // Query to find the document with request_status: false
     const q = query(
       collection(db, "access_request"),
-      where("request_status", "==", false || true)
+      where("request_status", "in", [true, false])
     );
 
     const querySnapshot = await getDocs(q);
