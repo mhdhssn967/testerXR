@@ -1,25 +1,38 @@
-import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore"
+import { getFirestore, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 
-/**
- * Registers a device by setting its status to "active" in Firestore.
- * Assumes Firebase has already been initialized elsewhere.
- *
- * @param {string} deviceId - Unique device ID to register
- * @returns {Promise<void>}
- */
 export const registerDevice = async (deviceId) => {
   try {
     const db = getFirestore();
 
-    await setDoc(doc(db, "auth_requests", deviceId), {
+    // Query to find the document with request_status: false
+    const q = query(
+      collection(db, "access_request"),
+      where("request_status", "==", false)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Get the first document with request_status: false
+      const docRef = querySnapshot.docs[0].ref;
+      
+      // Update that document to set request_status to true
+      await updateDoc(docRef, {
+        request_status: true,
+      });
+    } else {
+      console.log("No document with request_status: false found.");
+    }
+
+    // Proceed with setting the new document for this deviceId
+    await setDoc(doc(db, "device_request", deviceId), {
       status: "active",
       timestamp: serverTimestamp(),
       deviceId: deviceId
     });
 
-    console.log(`✅ Device ${deviceId} marked as active.`);
-  } catch (err) {
-    console.error("🔥 Error registering device:", err);
-    throw err;
+  } catch (error) {
+    console.error("Error registering device: ", error);
   }
 };
