@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './VRDevice.css'
-import { registerDevice, setCredentialsFalse, useAccessRequestCredentialsStatus, useAccessRequestStatus } from './services/registerDevice'
+import { loginUser, registerDevice, setCredentialsFalse, useAccessRequestCredentialsStatus, useAccessRequestStatus } from './services/registerDevice'
 import { useNavigate } from 'react-router-dom'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../firebaseConfig'
+
 
 const VRDevice = () => {
 
@@ -22,14 +25,27 @@ const VRDevice = () => {
       
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
+  e.preventDefault();
+  try {
+    const docRef = doc(db, "device_request", deviceId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const { email, password } = docSnap.data();
+      if (!email || !password) {
+        console.log("Email or password missing in Firestore document.");
+        return;
+      }
+
       await loginUser(email, password);
       navigate('/home'); // redirect on success
-    } catch (err) {
-      setError(err.message); // show error
+    } else {
+      console.log("No device request found.");
     }
-  };
+  } catch (err) {
+    console.log("Login failed:", err.message);
+  }
+};
     
 
   return (
@@ -43,7 +59,7 @@ const VRDevice = () => {
           <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
           }
         <button onClick={handleRegisterationFalse}>Set False</button>
-        {credentialsExist&&<button onClick={handleLogin}>Login</button>}
+        {credentialsExist&&<button className='login-btn' onClick={handleLogin}>Login</button>}
     </div>
     </>
   )
