@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 import './VRDevice.css'
-import { registerDevice, useAccessRequestStatus } from './services/registerDevice'
+import { registerDevice, setCredentialsFalse, useAccessRequestCredentialsStatus, useAccessRequestStatus } from './services/registerDevice'
 
 const VRDevice = () => {
 
     const deviceId='edfk3455309sdznswerp00234'
     
 
-    const handleRegisteration=async(bool)=>{
-        await registerDevice(deviceId,bool)
+    const handleRegisteration=async()=>{
+        await registerDevice(deviceId,true)
+    }
+    const handleRegisterationFalse=async()=>{
+      await registerDevice(deviceId,false)
+      await setCredentialsFalse()
     }
 
     const authRequest = useAccessRequestStatus(); 
-    console.log(authRequest);
+    const credentialsExist = useAccessRequestCredentialsStatus();
+    console.log('credentials',credentialsExist);
+    
 
     
   return (
@@ -22,10 +28,10 @@ const VRDevice = () => {
         <h2>Register your device to continue</h2>
         <h2>Device Id - {deviceId}</h2>
         {authRequest?
-          <button onClick={()=>handleRegisteration(true)}>Register Device</button>:
+          <button onClick={handleRegisteration}>Register Device</button>:
           <button>Registering Device <i className="fa-solid fa-spinner"></i></button>
           }
-        <button onClick={()=>handleRegisteration(false)}>Set False</button>
+        <button onClick={handleRegisterationFalse}>Set False</button>
     </div>
     </>
   )

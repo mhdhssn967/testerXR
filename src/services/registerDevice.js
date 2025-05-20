@@ -65,3 +65,40 @@ export const useAccessRequestStatus = () => {
 
   return isRequestActive;
 };
+
+export const useAccessRequestCredentialsStatus = () => {
+  const [isCredentials, setIsCredentials] = useState(false);
+
+  useEffect(() => {
+    const accessRequestRef = collection(firestore, "access_request");
+    const q = query(accessRequestRef, where("credentials_exist", "==", false));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (!snapshot.empty) {
+        setIsCredentials(true);
+      } else {
+        setIsCredentials(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return isCredentials;
+};
+
+
+export const setCredentialsFalse=async()=>{
+  const querySnapshotCredentials = await getDocs(collection(firestore, "access_request"));
+
+    if (!querySnapshotCredentials.empty) {
+      const firstDoc = querySnapshotCredentials.docs[0];
+      const docRef = doc(firestore, "access_request", firstDoc.id);
+
+      // set credentials exist false
+      await updateDoc(docRef, {
+        credentials_exist:false
+      });
+    }
+    
+}
