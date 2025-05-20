@@ -45,7 +45,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className='home' style={{display:'flex',flexDirection:'column',textAlign:'center',width:'100vw'}}>
       <h2>Successfully Logged In</h2>
       {loading ? (
         <p>Loading user data...</p>
