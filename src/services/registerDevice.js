@@ -1,5 +1,6 @@
-import { getFirestore, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, query, where, getDocs, collection } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
+
 
 export const registerDevice = async (deviceId) => {
   try {
