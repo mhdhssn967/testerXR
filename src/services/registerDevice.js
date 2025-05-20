@@ -99,3 +99,16 @@ export const setCredentialsFalse=async()=>{
     }
     
 }
+
+
+// Login user
+
+export const loginUser = async (email, password) => {
+  const auth = getAuth();
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user; // success
+  } catch (error) {
+    throw error; // to be caught in the component
+  }
+};
