@@ -43,7 +43,7 @@ export const registerDevice = async (deviceId, bool) => {
   } catch (error) {
     console.error("Error registering device: ", error);
   }
-};;
+};
 
 
 
@@ -99,8 +99,7 @@ export const setCredentialsFalse=async()=>{
       await updateDoc(docRef, {
         credentials_exist:false
       });
-    }
-    
+    }   
 }
 
 
